@@ -114,10 +114,10 @@ export default class ReactPlayer extends Component {
     return (
       <Player
         {...this.props}
-        innerPlayer={innerPlayer}
         ref={this.activePlayerRef}
-        key={Player.displayName}
+        key={innerPlayer.displayName}
         config={this.config}
+        innerPlayer={innerPlayer}
       />
     )
   }
@@ -141,11 +141,12 @@ export default class ReactPlayer extends Component {
     }
     return preloadPlayers.map(this.renderPreloadPlayer)
   }
-  renderPreloadPlayer = Player => {
+  renderPreloadPlayer = innerPlayer => {
     return (
       <Player
-        key={Player.displayName}
+        key={innerPlayer.displayName}
         config={this.config}
+        innerPlayer={innerPlayer}
       />
     )
   }

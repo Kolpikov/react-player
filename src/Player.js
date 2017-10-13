@@ -29,17 +29,24 @@ export default class Player extends Component {
     }
     this.mounted = false
   }
-  componentWillReceiveProps (nextProps) {
-    const { url, playing, volume, muted, playbackRate } = this.props
-    // Invoke player methods based on incoming props
-    if (url !== nextProps.url && nextProps.url) {
+  componentDidUpdate (prevProps) {
+    const { innerPlayer, url } = this.props
+    if (prevProps.innerPlayer !== innerPlayer) {
+      this.isReady = false
       this.seekOnPlay = null
       this.startOnPlay = true
-      if (url && !this.isReady) {
-        this.loadOnReady = nextProps.url
-      } else {
-        this.player.load(nextProps.url, this.isReady)
-      }
+      this.player.load(url, this.isReady)
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    // Invoke player methods based on incoming props
+    const { innerPlayer, url, playing, volume, muted, playbackRate } = this.props
+    if (innerPlayer !== nextProps.innerPlayer) {
+      this.player.stop()
+      return // A new player is coming, so don't invoke any other methods
+    }
+    if (url !== nextProps.url) {
+      this.player.load(nextProps.url, this.isReady)
     }
     if (url && !nextProps.url) {
       this.player.stop()
